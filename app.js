@@ -16,6 +16,7 @@ navigator.geolocation.getCurrentPosition(position => {
       console.log(json);
       console.log(json.main.feels_like);
       console.log(json.weather[0].description);
+      console.log(json.weather[0].icon);
 
     });
 });
