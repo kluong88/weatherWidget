@@ -14,7 +14,7 @@ function getCurrentConditions(latitude, longitude) {
       if (resp.ok) {
         return resp.json();
       } else {
-        throw new Error("Invalid search input. Please try again.");
+        throw new Error("An error occured. Please try again!");
       }
     })
     .then(currentConditionsResults => {
@@ -34,7 +34,7 @@ function getForecast(latitude, longitude) {
       if (resp.ok) {
         return resp.json();
       } else {
-        throw new Error("Invalid search input. Please try again.");
+        throw new Error("An error occured. Please try again!");
       }
     })
     .then(forecastResults => {
@@ -55,16 +55,8 @@ function getDailyForecast(array, size) {
     }
   }
 
-
-
-  descriptions.forEach(description => {
-    // console.log(description)
-    // console.log(dailyForecastArr);
-    // console.log(dailyForecastArr[0][0].main.temp_max)
-
-  })
-
   dailyForecastArr.forEach(dailyCondition => {
+    const date = new Date(dailyCondition[0].dt_txt);
     let temp_maxArr = [];
     let temp_minArr = [];
 
@@ -73,8 +65,14 @@ function getDailyForecast(array, size) {
       temp_maxArr.push(dailyCondition[x].main.temp_max);
       temp_minArr.push(dailyCondition[x].main.temp_min);
     }
+
     console.log(Math.floor(Math.max(...temp_maxArr)));
     console.log(Math.floor(Math.min(...temp_minArr)));
+    console.log(dailyCondition[4].weather[0].description);
+    console.log(dailyCondition[4].weather[0].icon);
+    console.log(dailyCondition[0].dt_txt);
+    console.log(date.toLocaleString('en-us', { weekday: 'long' }));
+
 
   })
 
