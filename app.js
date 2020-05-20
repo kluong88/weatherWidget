@@ -1,5 +1,7 @@
 const apiKey = `0fc73a1ffced9111b9e2a4e94bb3eb58`;
 const currentConditions = document.querySelector(`.current-conditions`);
+const fiveDayForecast = document.querySelector(`.day`);
+const descriptions = document.querySelectorAll(`.description`);
 
 navigator.geolocation.getCurrentPosition(position => {
   getCurrentConditions(position.coords.latitude, position.coords.longitude);
@@ -20,7 +22,7 @@ function getCurrentConditions(latitude, longitude) {
       <h2>Current Conditions</h2>
       <img src="http://openweathermap.org/img/wn/${currentConditionsResults.weather[0].icon}@2x.png" />
       <div class="current">
-        <div class="temp">${Math.ceil(currentConditionsResults.main.temp)}℃</div>
+        <div class="temp">${Math.floor(currentConditionsResults.main.temp)}℃</div>
         <div class="condition">${currentConditionsResults.weather[0].description}</div>
       `
     });
@@ -36,7 +38,6 @@ function getForecast(latitude, longitude) {
       }
     })
     .then(forecastResults => {
-      console.log(forecastResults.list);
       getDailyForecast(forecastResults.list, 8);
 
       forecastResults.list.forEach(results => {})
@@ -46,18 +47,36 @@ function getForecast(latitude, longitude) {
 function getDailyForecast(array, size) {
   const dailyForecastArr = [];
   for (let x = 0; x < array.length; x++) {
-    const last = dailyForecastArr[dailyForecastArr.length - 1];
-    if (!last || last.length === size) {
+    const lastDay = dailyForecastArr[dailyForecastArr.length - 1];
+    if (!lastDay || lastDay.length === size) {
       dailyForecastArr.push([array[x]]);
     } else {
-      last.push(array[x]);
+      lastDay.push(array[x]);
     }
   }
-  console.log(dailyForecastArr);
+
+
+
+  descriptions.forEach(description => {
+    // console.log(description)
+    // console.log(dailyForecastArr);
+    // console.log(dailyForecastArr[0][0].main.temp_max)
+
+  })
+
   dailyForecastArr.forEach(dailyCondition => {
-    console.log(dailyCondition[3].weather[0].description);
+    let temp_maxArr = [];
+    let temp_minArr = [];
+
+    console.log(dailyCondition);
+    for (let x = 0; x < dailyCondition.length; x++) {
+      temp_maxArr.push(dailyCondition[x].main.temp_max);
+      temp_minArr.push(dailyCondition[x].main.temp_min);
+    }
+    console.log(Math.floor(Math.max(...temp_maxArr)));
+    console.log(Math.floor(Math.min(...temp_minArr)));
+
   })
 
 
-  console.log(dailyForecastArr[0][3].weather[0].description);
 }
