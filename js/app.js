@@ -88,7 +88,6 @@ function updateForecast(dailyForecast) {
   let arrayKey = Object.keys(dailyForecast);
 
   for (let x = 0; x < forecastEle.length; x++) {
-    let dayOfWeek = ``;
     let minTempArr = [];
     let maxTempArr = [];
 
@@ -103,7 +102,7 @@ function updateForecast(dailyForecast) {
       minTempArr.push(data.min_temp);
     });
     forecastEle[x].innerHTML = `
-          <h3>${dayOfWeek}</h3>
+          <h3>${dailyForecast[arrayKey[nextForecast]][0].weekday}</h3>
           <img src="http://openweathermap.org/img/wn/${dailyForecast[arrayKey[nextForecast]][0].icon}@2x.png" />
           <div class="description">${dailyForecast[arrayKey[nextForecast]][0].description}</div>
           <div class="temp">
