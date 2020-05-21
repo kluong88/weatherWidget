@@ -88,19 +88,30 @@ function filterForecastData(forecastResults) {
 
 function updateForecast(dailyForecast) {
 
-  console.log(dailyForecast[0]);
+  console.log(dailyForecast)
 
+  let arrayKey = Object.keys(dailyForecast);
+
+
+  for (let x = 0; x < arrayKey.length; x++) {
+    let maxTemp = 0;
+    let minTemp = 0;
+
+    dailyForecast[arrayKey[x]].forEach(data => {
+      if (data.max_temp > maxTemp) {
+        maxTemp = data.max_temp;
+      } else if (data.min_temp > minTemp) {
+        minTemp = data.min_temp;
+      }
+    });
+    console.log(maxTemp)
+    console.log(minTemp)
+  }
   let nextForecast = currentDay + 1;
 
-  for (let x = 0; x < dailyForecast[x].length; x++) {
-    dailyForecast[x].forEach(data => {
-      console.log(data.weekday);
-      console.log(data.max_temp);
-    })
-  }
   for (let x = 0; x < forecastEle.length; x++) {
     forecastEle[x].innerHTML = `
-          <h3>${dailyForecast[nextForecast][0].weekday}</h3>
+          <h3>${dailyForecast[arrayKey[nextForecast]][0].weekday}</h3>
           <img src="http://openweathermap.org/img/wn/${dailyForecast[0][0].icon}@2x.png" />
           <div class="description">${dailyForecast[0][0].description}</div>
           <div class="temp">
@@ -109,14 +120,3 @@ function updateForecast(dailyForecast) {
 `
   }
 }
-
-// let temp_maxArr = [];
-// let temp_minArr = [];
-
-// for (let x = 0; x < weekdays.monday.length; x++) {
-
-//   temp_maxArr.push(weekdays.monday[x].main.temp_max);
-//   temp_minArr.push(weekdays.monday[x].main.temp_min);
-
-//   console.log(`${Math.floor(Math.max(...temp_maxArr))}℃`);
-// };
