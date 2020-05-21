@@ -59,7 +59,6 @@ function filterForecastData(forecastResults) {
     if (week[forecast.weekCode] === undefined) {
       week[forecast.weekCode] = [];
       week[forecast.weekCode].push({
-        // dt_txt: forecast.dt_txt,
         weekday: forecast.weekday,
         weekCode: forecast.weekCode,
         max_temp: forecast.main.temp_max,
@@ -69,7 +68,6 @@ function filterForecastData(forecastResults) {
       })
     } else
       week[forecast.weekCode].push({
-        // dt_txt: forecast.dt_txt,
         weekday: forecast.weekday,
         weekCode: forecast.weekCode,
         max_temp: forecast.main.temp_max,
@@ -82,41 +80,36 @@ function filterForecastData(forecastResults) {
   }, {
 
   });
-
   updateForecast(dateArray);
 };
 
 function updateForecast(dailyForecast) {
-
-  console.log(dailyForecast)
-
+  let nextForecast = (currentDay + 1);
   let arrayKey = Object.keys(dailyForecast);
 
-
-  for (let x = 0; x < arrayKey.length; x++) {
-    let maxTemp = 0;
-    let minTemp = 0;
-
-    dailyForecast[arrayKey[x]].forEach(data => {
-      if (data.max_temp > maxTemp) {
-        maxTemp = data.max_temp;
-      } else if (data.min_temp > minTemp) {
-        minTemp = data.min_temp;
-      }
-    });
-    console.log(maxTemp)
-    console.log(minTemp)
-  }
-  let nextForecast = currentDay + 1;
-
   for (let x = 0; x < forecastEle.length; x++) {
+    let dayOfWeek = ``;
+    let minTempArr = [];
+    let maxTempArr = [];
+
+    if (nextForecast >= arrayKey.length) {
+      nextForecast = 0;
+    }
+
+    dailyForecast[arrayKey[nextForecast]].forEach(data => {
+      dayOfWeek = data.weekday;
+
+      maxTempArr.push(data.max_temp);
+      minTempArr.push(data.min_temp);
+    });
     forecastEle[x].innerHTML = `
-          <h3>${dailyForecast[arrayKey[nextForecast]][0].weekday}</h3>
-          <img src="http://openweathermap.org/img/wn/${dailyForecast[0][0].icon}@2x.png" />
-          <div class="description">${dailyForecast[0][0].description}</div>
+          <h3>${dayOfWeek}</h3>
+          <img src="http://openweathermap.org/img/wn/${dailyForecast[arrayKey[nextForecast]][0].icon}@2x.png" />
+          <div class="description">${dailyForecast[arrayKey[nextForecast]][0].description}</div>
           <div class="temp">
-            <span class="high">11℃</span>/<span class="low">-3℃</span>
+            <span class="high">${Math.round(Math.max(...maxTempArr))}℃</span>/<span class="low">${Math.round(Math.min(...minTempArr))}℃</span>
           </div>
 `
+    nextForecast++;
   }
 }
