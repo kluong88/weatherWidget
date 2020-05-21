@@ -39,12 +39,11 @@ function fetchForecast(latitude, longitude) {
       }
     })
     .then(forecastResults => {
-      filterForecastData(forecastResults.list);
+      sortForecastResults(forecastResults.list);
     });
 };
 
-function filterForecastData(forecastResults) {
-  let filteredForecastArr = [];
+function sortForecastResults(forecastResults) {
   let dateArray = [];
 
   forecastResults.forEach(timeStamp => {
@@ -53,36 +52,26 @@ function filterForecastData(forecastResults) {
     timeStamp.weekCode = timeStampDate.getDay();
   });
 
-  filteredForecastArr = forecastResults.filter(timeStamp => timeStamp.weekCode != currentDay);
 
-  dateArray = filteredForecastArr.reduce(function(week, forecast) {
+  dateArray = forecastResults.reduce(function(week, forecast) {
     if (week[forecast.weekCode] === undefined) {
       week[forecast.weekCode] = [];
-      week[forecast.weekCode].push({
-        weekday: forecast.weekday,
-        weekCode: forecast.weekCode,
-        max_temp: forecast.main.temp_max,
-        min_temp: forecast.main.temp_min,
-        description: forecast.weather[0].description,
-        icon: forecast.weather[0].icon,
-      })
-    } else
-      week[forecast.weekCode].push({
-        weekday: forecast.weekday,
-        weekCode: forecast.weekCode,
-        max_temp: forecast.main.temp_max,
-        min_temp: forecast.main.temp_min,
-        description: forecast.weather[0].description,
-        icon: forecast.weather[0].icon,
-      })
+    }
+
+    week[forecast.weekCode].push({
+      weekday: forecast.weekday,
+      weekCode: forecast.weekCode,
+      max_temp: forecast.main.temp_max,
+      min_temp: forecast.main.temp_min,
+      description: forecast.weather[0].description,
+      icon: forecast.weather[0].icon,
+    })
 
     return week;
   }, {
 
   });
   updateForecast(dateArray);
-  console.log(dateArray);
-
 };
 
 function updateForecast(dailyForecast) {
@@ -97,9 +86,6 @@ function updateForecast(dailyForecast) {
     }
 
     dailyForecast[nextForecast].forEach(data => {
-      dayOfWeek = data.weekday;
-
-
       maxTempArr.push(data.max_temp);
       minTempArr.push(data.min_temp);
     });
