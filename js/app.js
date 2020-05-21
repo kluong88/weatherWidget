@@ -81,30 +81,33 @@ function filterForecastData(forecastResults) {
 
   });
   updateForecast(dateArray);
+  console.log(dateArray);
+
 };
 
 function updateForecast(dailyForecast) {
   let nextForecast = (currentDay + 1);
-  let arrayKey = Object.keys(dailyForecast);
 
   for (let x = 0; x < forecastEle.length; x++) {
     let minTempArr = [];
     let maxTempArr = [];
 
-    if (nextForecast >= arrayKey.length) {
+    if (nextForecast > 6) {
       nextForecast = 0;
     }
 
-    dailyForecast[arrayKey[nextForecast]].forEach(data => {
+    dailyForecast[nextForecast].forEach(data => {
       dayOfWeek = data.weekday;
+
 
       maxTempArr.push(data.max_temp);
       minTempArr.push(data.min_temp);
     });
+
     forecastEle[x].innerHTML = `
-          <h3>${dailyForecast[arrayKey[nextForecast]][0].weekday}</h3>
-          <img src="http://openweathermap.org/img/wn/${dailyForecast[arrayKey[nextForecast]][0].icon}@2x.png" />
-          <div class="description">${dailyForecast[arrayKey[nextForecast]][0].description}</div>
+          <h3>${dailyForecast[nextForecast][0].weekday}</h3>
+          <img src="http://openweathermap.org/img/wn/${dailyForecast[nextForecast][0].icon}@2x.png" />
+          <div class="description">${dailyForecast[nextForecast][0].description}</div>
           <div class="temp">
             <span class="high">${Math.round(Math.max(...maxTempArr))}℃</span>/<span class="low">${Math.round(Math.min(...minTempArr))}℃</span>
           </div>
